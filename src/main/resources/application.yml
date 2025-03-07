@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: demo
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://ulsanbackgom.iptime.org:23306/chatdb
+    username: backgom
+    password: backgom
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+    generate-ddl: true
+    database: mysql
+
+jwt:
+  secretKey: Y2hhdHNlcnZlcnNlY2VydGNoYXRzZXJ2ZXJzZWNlcnRjaGF0c2VydmVyc2VjZXJ0Y2hhdHNlcnZlcnNlY2VydGNoYXRzZXJ2ZXJzZWNlcnQ=
+  expiration: 3000
+
