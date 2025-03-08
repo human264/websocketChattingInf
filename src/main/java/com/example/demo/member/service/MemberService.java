@@ -1,6 +1,7 @@
 package com.example.demo.member.service;
 
 import com.example.demo.member.domain.Member;
+import com.example.demo.member.domain.MemberListRestDto;
 import com.example.demo.member.domain.MemberLoginReqDto;
 import com.example.demo.member.dto.MemberSaveReqDto;
 import com.example.demo.member.repository.MemberRepository;
@@ -11,6 +12,9 @@ import org.hibernate.boot.internal.StandardEntityNotFoundDelegate;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -42,5 +46,18 @@ public class MemberService {
             throw new IllegalIdentifierException("비밀번호가 일치하지 않습니다.");
         }
         return member;
+    }
+
+    public List<MemberListRestDto> findAll() {
+        List<Member> members = memberRepository.findAll();
+        List<MemberListRestDto> dtos = new ArrayList<>();
+        for (var m : members) {
+            MemberListRestDto memberListRestDto = new MemberListRestDto();
+            memberListRestDto.setId(m.getId());
+            memberListRestDto.setName(m.getName());
+            memberListRestDto.setEmail(m.getEmail());
+            dtos.add(memberListRestDto);
+        }
+        return dtos;
     }
 }

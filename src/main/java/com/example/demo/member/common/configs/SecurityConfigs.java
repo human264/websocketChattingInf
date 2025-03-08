@@ -31,13 +31,12 @@ public class SecurityConfigs {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a.requestMatchers
-                                ("/member/create", "/member/doLogin")
+                                ("/member/create", "/member/doLogin" ,"/connect/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(
-                        s -> s.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS))
+                        s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
