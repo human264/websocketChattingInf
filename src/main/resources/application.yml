@@ -16,6 +16,10 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
     generate-ddl: true
     database: mysql
+  data:
+    redis:
+      host: ulsanbackgom.iptime.org
+      port: 26379
 
 jwt:
   secretKey: Y2hhdHNlcnZlcnNlY2VydGNoYXRzZXJ2ZXJzZWNlcnRjaGF0c2VydmVyc2VjZXJ0Y2hhdHNlcnZlcnNlY2VydGNoYXRzZXJ2ZXJzZWNlcnQ=

@@ -2,6 +2,9 @@ package com.example.demo.member.chat.controller;
 
 import com.example.demo.member.chat.dto.ChatMessageDto;
 import com.example.demo.member.chat.service.ChatService;
+import com.example.demo.member.chat.service.RedisPubSubService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -11,8 +14,8 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequiredArgsConstructor
 public class StompController {
-
-    private final SimpMessageSendingOperations messageTemplate;
+//
+//    private final SimpMessageSendingOperations messageTemplate;
     private final ChatService chatService;
     // 방법1. MessageMapping(수신)과 SendTo(topic에 메세지 전달) 한꺼 번에 처리
 //    @MessageMapping("/{roomId}")
@@ -22,13 +25,18 @@ public class StompController {
 //        System.out.println("roomId : " + roomId + ", message : " + message);
 //        return message;
 //    }
+    private final RedisPubSubService redisPubSubService;
 
     //방법2. MessageMapping어노테이션만 활용.
     @MessageMapping("/{roomId}")
-    private void sendMessage(@DestinationVariable Long roomId, ChatMessageDto chatMessageReqDto) {
+    private void sendMessage(@DestinationVariable Long roomId, ChatMessageDto chatMessageReqDto) throws JsonProcessingException {
         System.out.println("roomId : " + roomId + ", message : " + chatMessageReqDto.getMessage());
         chatService.saveMessage(roomId, chatMessageReqDto);
-        messageTemplate.convertAndSend("/topic/" + roomId, chatMessageReqDto);
+        chatMessageReqDto.setRoomId(roomId);
+//        messageTemplate.convertAndSend("/topic/" + roomId, chatMessageReqDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String message = objectMapper.writeValueAsString(chatMessageReqDto);
+        redisPubSubService.publish("chat", message);
     }
 
 }
